@@ -1,0 +1,4 @@
+<dataset>
+    <product id="1" creation_date="2018-06-12 17:52:23" name="cake" price="100.5"/>
+    <product id="2" creation_date="2018-06-12 17:52:23" name="cake2" price="300.0"/>
+</dataset>
