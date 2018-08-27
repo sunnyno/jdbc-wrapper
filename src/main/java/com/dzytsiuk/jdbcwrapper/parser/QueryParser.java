@@ -2,25 +2,25 @@ package com.dzytsiuk.jdbcwrapper.parser;
 
 import com.dzytsiuk.jdbcwrapper.entity.Query;
 
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public class QueryParser {
 
-    public Query parseQuery(String query, Map param) {
+    public Query parseQuery(String query, Map<String, Object> param) {
         String[] words = query.split("\\s");
-        Queue<Object> parameterQueue = new LinkedList<>();
+        List<Object> paramList = new ArrayList<>();
+        StringBuilder queryStringBuilder = new StringBuilder(query);
         Query parsedQuery = new Query();
         for (String word : words) {
             if (word.startsWith(":")) {
-                query = query.replace(word, "?");
+                int indexOfReplaceStart = queryStringBuilder.indexOf(word);
+                queryStringBuilder.replace(indexOfReplaceStart, indexOfReplaceStart +word.length(), "?");
                 Object parameter = param.get(word.substring(1));
-                parameterQueue.add(parameter);
+                paramList.add(parameter);
             }
         }
-        parsedQuery.setQuery(query);
-        parsedQuery.setParams(parameterQueue.toArray());
+        parsedQuery.setQuery(queryStringBuilder.toString());
+        parsedQuery.setParams(paramList);
         return parsedQuery;
     }
 

@@ -37,6 +37,12 @@
         </plugins>
     </build>
 <dependencies>
+    <!--logger-->
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.3</version>
+    </dependency>
     <!--tests-->
     <dependency>
         <groupId>junit</groupId>
@@ -66,18 +72,6 @@
         <groupId>commons-dbcp</groupId>
         <artifactId>commons-dbcp</artifactId>
         <version>1.2.2</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>1.3.2</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>1.5.2</version>
-        <scope>test</scope>
     </dependency>
 </dependencies>
 

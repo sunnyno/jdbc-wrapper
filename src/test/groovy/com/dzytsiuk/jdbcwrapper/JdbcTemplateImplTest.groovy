@@ -33,9 +33,9 @@ class JdbcTemplateImplTest {
 
     @Test
     void "test query with parameters map"() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(dbInitializer.getDataSource())
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dbInitializer.getDataSource())
         def query = "SELECT * from Product where name like :name AND price > :price"
-        def param = ["name": "cake%", "price": "100"]
+        def param = ["name": "cake%", "price": 100.00] as HashMap<String, Object>
         def actualResult = jdbcTemplate.query(query, new ProductRowMapper(), param)
         def expectedResult = [new Product(1, LocalDateTime.of(2018, 6, 12, 17, 52, 23),
                 "cake", 100.5),
@@ -49,7 +49,7 @@ class JdbcTemplateImplTest {
 
     @Test
     void "test query with vararg parameters"() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(dbInitializer.getDataSource())
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dbInitializer.getDataSource())
         def query = "SELECT * from Product where name like ? AND price > ?"
         def actualResult = jdbcTemplate.query(query, new ProductRowMapper(), "cake%", "100.0")
         def expectedResult = [new Product(1, LocalDateTime.of(2018, 6, 12, 17, 52, 23),
@@ -63,7 +63,7 @@ class JdbcTemplateImplTest {
 
     @Test
     void "test query for one object with parameter map"() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(dbInitializer.getDataSource())
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dbInitializer.getDataSource())
         def query = "SELECT * from Product where id = :id"
         def param = ["id": "1"]
         def actualResult = jdbcTemplate.queryForObject(query, new ProductRowMapper(), param)
@@ -75,7 +75,7 @@ class JdbcTemplateImplTest {
 
     @Test
     void "test query for one object with parameter map with MoreThanOneObjectException"() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(dbInitializer.getDataSource())
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dbInitializer.getDataSource())
         def query = "SELECT * from Product where name like :name"
         def param = ["name": "cake%"]
         shouldFail(MoreThanOneObjectFoundException.class, {
@@ -85,7 +85,7 @@ class JdbcTemplateImplTest {
 
     @Test
     void "test query for one object with varargs"() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(dbInitializer.getDataSource())
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dbInitializer.getDataSource())
         def query = "SELECT * from Product where id = ?"
         def actualResult = jdbcTemplate.queryForObject(query, new ProductRowMapper(), 1)
         def expectedResult = new Product(1, LocalDateTime.of(2018, 6, 12, 17, 52, 23),
@@ -96,7 +96,7 @@ class JdbcTemplateImplTest {
 
     @Test
     void "test query for one object with varargs with MoreThanOneObjectException"() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(dbInitializer.getDataSource())
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dbInitializer.getDataSource())
         def query = "SELECT * from Product where name like ?"
         shouldFail(MoreThanOneObjectFoundException.class,
                 { jdbcTemplate.queryForObject(query, new ProductRowMapper(), "cake%") })
@@ -104,7 +104,7 @@ class JdbcTemplateImplTest {
 
     @Test
     void "test update with parameter map"() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(dbInitializer.getDataSource())
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dbInitializer.getDataSource())
         def query = "INSERT INTO Product(name, price, creation_date) VALUES ( :name , :price , :creation_date )"
         def param = ["name": "cake3", "price": 1.0, "creation_date": LocalDateTime.now()]
         def actualResult = jdbcTemplate.update(query, param)
@@ -115,12 +115,11 @@ class JdbcTemplateImplTest {
 
     @Test
     void "test update with vararg"() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(dbInitializer.getDataSource())
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dbInitializer.getDataSource())
         def query = "INSERT INTO Product(name, price, creation_date) VALUES ( ?, ?, ?)"
         def actualResult = jdbcTemplate.update(query, "cake3", 1.0, LocalDateTime.now())
         def expectedResult = 1
         assertEquals(expectedResult, actualResult)
-
     }
 
 }
