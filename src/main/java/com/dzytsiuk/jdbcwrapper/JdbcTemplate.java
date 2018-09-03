@@ -37,7 +37,8 @@ public class JdbcTemplate {
             for (int i = 0; i < args.length; i++) {
                 setQueryParam(preparedStatement, i + 1, args[i]);
             }
-            return getResultFromResultSet(rowMapper, preparedStatement);
+            logger.info("Executing query {}", query);
+            return getListFromResultSet(rowMapper, preparedStatement);
         } catch (SQLException e) {
             logger.error("Failed to execute query {}", query);
             throw new RuntimeException("Error executing query " + query, e);
@@ -52,7 +53,8 @@ public class JdbcTemplate {
             for (int i = 0; i < params.size(); i++) {
                 setQueryParam(preparedStatement, i + 1, params.get(i));
             }
-            return getResultFromResultSet(rowMapper, preparedStatement);
+            logger.info("Executing query {}", query);
+            return getListFromResultSet(rowMapper, preparedStatement);
         } catch (SQLException e) {
             logger.error("Failed to execute query {}", query);
             throw new RuntimeException("Error executing query " + query, e);
@@ -66,6 +68,7 @@ public class JdbcTemplate {
 
     public <T> T queryForObject(String query, RowMapper<T> rowMapper, Object... args) {
         List<T> resultList = query(query, rowMapper, args);
+        logger.info("Executing query {}", query);
         return getObjectFromOneElementList(resultList);
     }
 
@@ -76,6 +79,7 @@ public class JdbcTemplate {
             for (int i = 0; i < args.length; i++) {
                 setQueryParam(preparedStatement, i + 1, args[i]);
             }
+            logger.info("Executing query {}", query);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error("Failed to execute query {}", query);
@@ -91,6 +95,7 @@ public class JdbcTemplate {
             for (int i = 0; i < params.size(); i++) {
                 setQueryParam(preparedStatement, i + 1, params.get(i));
             }
+            logger.info("Executing query {}", query);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error("Failed to execute query {}", query);
@@ -99,7 +104,7 @@ public class JdbcTemplate {
     }
 
 
-    private <T> List<T> getResultFromResultSet(RowMapper<T> rowMapper, PreparedStatement preparedStatement) throws SQLException {
+    private <T> List<T> getListFromResultSet(RowMapper<T> rowMapper, PreparedStatement preparedStatement) throws SQLException {
         try (ResultSet resultSet = preparedStatement.executeQuery()) {
             List<T> resultList = new ArrayList<>();
             while (resultSet.next()) {
